@@ -1656,19 +1656,19 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
-example = [
+examples = [
     { name = "jupyterlab" },
     { name = "pandas" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "jupyterlab", marker = "extra == 'example'", specifier = ">=4.2.0,<5" },
+    { name = "jupyterlab", marker = "extra == 'examples'", specifier = ">=4.2.0,<5" },
     { name = "numpy", specifier = ">=2.2.4" },
-    { name = "pandas", marker = "extra == 'example'", specifier = ">=2.3.3" },
+    { name = "pandas", marker = "extra == 'examples'", specifier = ">=2.3.3" },
     { name = "scipy", specifier = ">=1.15.2" },
 ]
-provides-extras = ["example"]
+provides-extras = ["examples"]
 
 [package.metadata.requires-dev]
 dev = []
