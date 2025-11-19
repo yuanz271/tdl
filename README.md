@@ -1,6 +1,6 @@
-# Temporal Difference Learning (TDL)
+# SARSA
 
-Temporal-difference SARSA toolkit for fitting behavioural datasets and running reproducible experiments.
+SARSA toolkit for fitting behavioural datasets and running reproducible experiments.
 
 ## Installation
 
@@ -19,7 +19,7 @@ pip install -e .[examples]
 Install the latest code directly from GitHub:
 
 ```bash
-pip install git+https://github.com/yuanz271/tdl.git
+pip install git+https://github.com/yuanz271/sarsa.git
 ```
 
 ## Example

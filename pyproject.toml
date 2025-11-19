@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "tdl"
+name = "sarsa"
 version = "0.1.0"
 description = "Temporal Difference Learning"
 readme = "README.md"
@@ -23,11 +23,11 @@ examples = [
 dev = []
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/tdl"]
+packages = ["src/sarsa"]
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "src/tdl",
+    "src/sarsa",
     "README.md",
     "CHANGELOG.md",
     "AGENTS.md",

@@ -1517,6 +1517,33 @@ wheels = [
 ]
 
 [[package]]
+name = "sarsa"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "numpy" },
+    { name = "scipy" },
+]
+
+[package.optional-dependencies]
+examples = [
+    { name = "jupyterlab" },
+    { name = "pandas" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "jupyterlab", marker = "extra == 'examples'", specifier = ">=4.2.0,<5" },
+    { name = "numpy", specifier = ">=2.2.4" },
+    { name = "pandas", marker = "extra == 'examples'", specifier = ">=2.3.3" },
+    { name = "scipy", specifier = ">=1.15.2" },
+]
+provides-extras = ["examples"]
+
+[package.metadata.requires-dev]
+dev = []
+
+[[package]]
 name = "scipy"
 version = "1.16.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1645,33 +1672,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/28/e3/55dcc2cfbc3ca9c29
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f1/7b/ce1eafaf1a76852e2ec9b22edecf1daa58175c090266e9f6c64afcd81d91/stack_data-0.6.3-py3-none-any.whl", hash = "sha256:d5558e0c25a4cb0853cddad3d77da9891a08cb85dd9f9f91b9f8cd66e511e695", size = 24521, upload-time = "2023-09-30T13:58:03.53Z" },
 ]
-
-[[package]]
-name = "tdl"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "numpy" },
-    { name = "scipy" },
-]
-
-[package.optional-dependencies]
-examples = [
-    { name = "jupyterlab" },
-    { name = "pandas" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "jupyterlab", marker = "extra == 'examples'", specifier = ">=4.2.0,<5" },
-    { name = "numpy", specifier = ">=2.2.4" },
-    { name = "pandas", marker = "extra == 'examples'", specifier = ">=2.3.3" },
-    { name = "scipy", specifier = ">=1.15.2" },
-]
-provides-extras = ["examples"]
-
-[package.metadata.requires-dev]
-dev = []
 
 [[package]]
 name = "terminado"
