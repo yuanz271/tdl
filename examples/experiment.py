@@ -1,3 +1,5 @@
+# Author: Yuan Zhao <yuan.zhao@nih.gov>
+# Affiliation: Machine Learning Core, NIMH
 """
 Experimental design and data processing
 """
