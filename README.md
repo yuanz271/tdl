@@ -16,9 +16,9 @@ For examples:
 pip install -e .[examples]
 ```
 
-## Usage
+## Example
 
-Explore the default learning session against `examples/M1.csv`:
+Fit to the session `examples/M1.csv`:
 
 ```bash
 jupyter lab examples/sarsa.ipynb
