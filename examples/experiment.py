@@ -255,16 +255,20 @@ rt_lc_unp_state_spec = (
 
 def downsample_behavior_data(behavior_data, frequency):
     """
-    Downsample behavior data to a specified frequency.
+    Downsample behaviour data to a specified frequency.
 
-    Args:
-    - behavior_data (pd.DataFrame): A Pandas DataFrame containing the behavior data.
-    - frequency (str): The frequency to downsample to, in Pandas resample format (e.g. '500ms').
+    Parameters
+    ----------
+    behavior_data : pd.DataFrame
+        Full-resolution behavioural measurements indexed by ``TIME (S)``.
+    frequency : str
+        Pandas-compatible resampling frequency (e.g., ``\"500ms\"``).
 
-    Returns:
-    - behavior_data_ds (pd.DataFrame): A Pandas DataFrame containing the downsampled behavior data.
+    Returns
+    -------
+    pd.DataFrame
+        Behavioural data aggregated to ``frequency`` with gaps forward-filled.
     """
-
     list_of_column_names = list(behavior_data.columns)
     behavior_data_ds = pd.DataFrame()
 
@@ -328,8 +332,23 @@ def downsample_behavior_data(behavior_data, frequency):
 
 
 def process_data(df, phase):
-    """Prepare the states
-    Transform location, light and tone to state-ready form.
+    """
+    Prepare state features from raw behavioural indicators.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame containing location indicators (``IN PLATFORM``, ``IN CENTER``,
+        ``IN REWARD ZONE``) indexed by time in seconds.
+    phase : str
+        Experimental block identifier (``\"RT\"``, ``\"LC\"``, or ``\"UNP\"``) used
+        to fetch onset templates.
+
+    Returns
+    -------
+    pd.DataFrame
+        Augmented feature table containing the original location indicators plus
+        derived light, tone, and shock onsets.
     """
     df = df[["IN PLATFORM", "IN CENTER", "IN REWARD ZONE"]]
     light_onset = pd.DataFrame(
@@ -388,7 +407,19 @@ class Location(IntEnum):
 
 
 def row_to_state(row):
-    """Convert a DataFrame row to a state tuple"""
+    """
+    Convert a processed behaviour row into the discrete SARSA state.
+
+    Parameters
+    ----------
+    row : pd.Series
+        Single timestep containing location indicators plus onset features.
+
+    Returns
+    -------
+    np.ndarray
+        Integer state vector ``(location, light, tone)`` suitable for SARSA.
+    """
     s = np.zeros(3, dtype=int)
     if row["IN PLATFORM"] > 0:
         s[StateAxis.Loc] = Location.P
