@@ -1,6 +1,6 @@
 # Temporal Difference Learning (TDL)
 
-Reinforcement learning fitting for behavioural datasets.
+Temporal-difference SARSA toolkit for fitting behavioural datasets and running reproducible experiments.
 
 ## Installation
 
