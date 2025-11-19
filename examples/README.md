@@ -9,5 +9,4 @@ examples remain portable.
 
 Install the optional tooling before opening the notebook:
 
-- `uv sync --extra examples`
 - `pip install -e .[examples]`
