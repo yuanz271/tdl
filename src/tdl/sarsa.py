@@ -20,9 +20,11 @@ from scipy.special import log_softmax
 
 
 class Param(IntEnum):
-    alpha = 0
-    beta = 1
-    gamma = 2
+    """SARSA Parameters"""
+
+    alpha = 0  # learning rate
+    beta = 1  # inverse temperature
+    gamma = 2  # decay
 
 
 @dataclass
@@ -71,12 +73,12 @@ def to_prob(p):
     return np.exp(p)
 
 
-EPS = 1e-8
+EPS = 1e-8  # Minimum positive value
 PARAM_BOUNDS = [
     (EPS, None),
     (EPS, None),
     (EPS, 1 - EPS),
-]
+]  # Bounds for SARSA parameters
 
 
 def cross_entropy(inputs, targets):
@@ -118,7 +120,6 @@ def merge(params, static):
     )
 
 
-# >>> learning rule
 def update(params, quintuple: Quintuple, q: NDArray, reward_func: Callable):
     """Apply the SARSA update for a single transition.
 
@@ -148,15 +149,12 @@ def update(params, quintuple: Quintuple, q: NDArray, reward_func: Callable):
     a1 = quintuple.a1
     s2 = quintuple.s2
     a2 = quintuple.a2
-    r = quintuple.r2 = reward_func(params, s2)
+    r = quintuple.r2 = reward_func(params, s2)  # calculate stepwise net reward on the fly for trainable reward-related parameters
 
-    error = r + gamma * q[*s2, a2] - q[*s1, a1]
+    error = r + gamma * q[*s2, a2] - q[*s1, a1]  # TD error
 
-    q_new[*s1, a1] = q[*s1, a1] + alpha * error
+    q_new[*s1, a1] = q[*s1, a1] + alpha * error  # Update
     return q_new, error
-
-
-# <<<
 
 
 def run(params, quintuples, q0, reward_func):
