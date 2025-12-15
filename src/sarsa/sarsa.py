@@ -6,7 +6,7 @@ SARSA
 This implementation is designed to be independent from the interpretation of state and action.
 It only requires the state and action to be integer NumPy arrays.
 It assumes that the first 3 components of parameter vector are alpha, beta and gamma.
-The rest components are used-defined parameters (e.g. intrinsic reward)
+The rest components are user-defined parameters (e.g. hidden reward)
 
 """
 
