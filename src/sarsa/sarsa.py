@@ -149,7 +149,7 @@ def update(params, quintuple: Quintuple, q: NDArray, reward_func: Callable):
     a1 = quintuple.a1
     s2 = quintuple.s2
     a2 = quintuple.a2
-    r = quintuple.r2 = reward_func(params, s2)  # calculate stepwise net reward on the fly for trainable reward-related parameters
+    r = quintuple.r2  
 
     error = r + gamma * q[*s2, a2] - q[*s1, a1]  # TD error
 
@@ -188,8 +188,9 @@ def run(params, quintuples, q0, reward_func):
     for t in range(T):
         quintuple = quintuples[t]
         logprob[t] = action_logprob(params, q[*quintuple.s1])
+        quintuple.r2 = reward_func(params, quintuple.s2)  # calculate stepwise net reward on the fly for trainable reward-related parameters
         qs[t + 1], error[t + 1] = update(params, quintuple, q, reward_func)
-        q = qs[t + 1]
+        # q = qs[t + 1]
     return qs, logprob, error
 
 
