@@ -19,6 +19,14 @@ from scipy import optimize
 from scipy.special import log_softmax
 
 
+EPS = 1e-8  # Minimum positive value
+PARAM_BOUNDS = [
+    (EPS, None),
+    (EPS, None),
+    (EPS, 1 - EPS),
+]  # Bounds for SARSA parameters
+
+
 class ParamIndex(IntEnum):
     """SARSA parameter index"""
 
@@ -71,14 +79,6 @@ def to_prob(p):
         Probability distribution matching ``p``.
     """
     return np.exp(p)
-
-
-EPS = 1e-8  # Minimum positive value
-PARAM_BOUNDS = [
-    (EPS, None),
-    (EPS, None),
-    (EPS, 1 - EPS),
-]  # Bounds for SARSA parameters
 
 
 def cross_entropy(inputs, targets):
@@ -147,7 +147,7 @@ def update(params, quintuple: Quintuple, q: NDArray):
     a1 = quintuple.a1
     s2 = quintuple.s2
     a2 = quintuple.a2
-    r = quintuple.r2  
+    r = quintuple.r2
 
     error = r + gamma * q[*s2, a2] - q[*s1, a1]  # TD error
 
@@ -186,7 +186,9 @@ def run(params, quintuples, q0, reward_func):
     for t in range(T):
         quintuple = quintuples[t]
         logprob[t] = action_logprob(params, q[*quintuple.s1])
-        quintuple.r2 = reward_func(params, quintuple.s2)  # calculate stepwise net reward on the fly for trainable reward-related parameters
+        quintuple.r2 = reward_func(
+            params, quintuple.s2
+        )  # calculate stepwise net reward on the fly for trainable reward-related parameters
         qs[t + 1], error[t + 1] = update(params, quintuple, q)
         # q = qs[t + 1]
     return qs, logprob, error
