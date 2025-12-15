@@ -19,8 +19,8 @@ from scipy import optimize
 from scipy.special import log_softmax
 
 
-class Param(IntEnum):
-    """SARSA Parameters"""
+class ParamIndex(IntEnum):
+    """SARSA parameter index"""
 
     alpha = 0  # learning rate
     beta = 1  # inverse temperature
@@ -53,7 +53,7 @@ def action_logprob(params, v) -> NDArray:
     NDArray
         Log-probabilities over the action set after softmaxing ``v`` by ``beta``.
     """
-    beta = params[Param.beta]
+    beta = params[ParamIndex.beta]
     return log_softmax(v * beta)
 
 
@@ -140,8 +140,8 @@ def update(params, quintuple: Quintuple, q: NDArray):
         Temporal-difference error produced by the update.
     """
     # consequent reward transitioning from s1 to s2
-    alpha = params[Param.alpha]
-    gamma = params[Param.gamma]
+    alpha = params[ParamIndex.alpha]
+    gamma = params[ParamIndex.gamma]
     q_new = q.copy()
     s1 = quintuple.s1
     a1 = quintuple.a1
