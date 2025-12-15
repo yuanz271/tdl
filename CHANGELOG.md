@@ -16,3 +16,4 @@ All notable changes to this project will be documented in this file.
 - Relocated the SARSA runner and experiment helpers into a top-level `examples/` directory to keep algorithms standalone.
 - Removed the package-level entry point and captured orchestration inside `examples/sarsa.ipynb` as an interactive example.
 - Kept experiment helpers next to the walkthrough so the `tdl` package remains task-agnostic.
+- Compute stepwise rewards during `run` so `update` can consume them directly, keeping reward-related parameters consistent across trajectories.
