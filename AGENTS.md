@@ -1,23 +1,79 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
-The reinforcement learning logic is concentrated in `src/tdl/sarsa.py`. Task-specific experiment helpers live under `examples/` (e.g., `examples/experiment.py`) while the end-to-end walkthrough now ships as `examples/sarsa.ipynb` so the package stays agnostic to any single dataset. Open the notebook (e.g., `jupyter lab examples/sarsa.ipynb`) to see how data loading, state construction, and solver configuration work together. Keep new analysis utilities alongside the SARSA helpers under `src/tdl/` to preserve import paths. Shared datasets such as `data/M1.csv` should remain version-controlled; place large or sensitive files outside `data/` and document their location.
+**Generated:** 2025-01-18 | **Commit:** 7012eac | **Branch:** transition
 
-## Build, Test, and Development Commands
-- `uv sync` — installs all runtime dependencies defined in `pyproject.toml`/`uv.lock` using Python 3.11.
-- `uv sync --extra examples` — adds optional tooling (e.g., JupyterLab) required for the SARSA notebook.
-- `pip install -e .` — editable install alternative when `uv` is unavailable.
-- `pip install -e .[examples]` — editable install with the optional notebook tooling.
-- `jupyter lab examples/sarsa.ipynb` — walks through fitting SARSA against `data/M1.csv` for a smoke test.
-- `uvx ruff check` — lints the codebase; treat warnings as errors before committing.
-- `uvx ruff format` — applies standardized formatting to Python sources; run after substantial edits.
-When adding notebooks or scripts, prefer relative imports (e.g., `from tdl import sarsa`) so they work after editable installation.
+## Overview
 
-## Coding Style & Naming Conventions
-Follow PEP 8 with four-space indentation and limit files to one primary class or solver. Module-level constants stay uppercase (e.g., `ACTION_SIZE`), enums and classes use `CamelCase`, and helper functions stay `snake_case`. Use type hints on public functions (`def run_session(path: Path, rng: np.random.Generator) -> None`) and document them with NumPy-style docstrings including `Parameters`, `Returns`, and `Raises` sections where applicable.
+SARSA reinforcement learning toolkit for fitting behavioural datasets. Pure Python library (numpy, scipy) with Jupyter notebook workflow.
 
-## Testing Guidelines
-No automated tests ship today, so please add `pytest`-style cases under a new `tests/` directory whenever you contribute behaviour. Name files `test_<module>.py` and mirror the structure of `src/`. Provide fixtures for sample quintuples rather than loading full CSVs when possible, and ensure `pytest` runs cleanly via `pytest -q` before submitting.
+## Structure
 
-## Commit & Pull Request Guidelines
-While no Git history is tracked in this workspace, use short, imperative commit subjects (`Add SARSA policy evaluation`) with optional detail in the body. Reference linked issues or experiment IDs in square brackets for traceability. Pull requests should summarize algorithmic intent, list datasets touched, and include screenshots or table snippets for major outcome changes. Flag data dependencies and new parameters in the PR checklist so reviewers can reproduce results. Update `CHANGELOG.md` with notable additions, fixes, and behavioural changes before requesting review, and stamp each release heading (including interim entries) with an ISO 8601 date.
+```
+sarsa/
+├── src/sarsa/           # Core SARSA algorithm (sarsa.py, __init__.py)
+├── examples/            # Notebook demo + experiment helpers + sample data
+│   ├── sarsa.ipynb      # Primary entry point - run this
+│   ├── experiment.py    # Task-specific state/reward helpers
+│   └── M1.csv           # Sample behavioural dataset (6.3MB)
+├── pyproject.toml       # Build config (hatchling), deps (numpy, scipy)
+└── uv.lock              # Locked dependencies
+```
+
+## Where to Look
+
+| Task | Location | Notes |
+|------|----------|-------|
+| SARSA algorithm | `src/sarsa/sarsa.py` | `fit()`, `run()`, `update()`, `Quintuple` |
+| State construction | `examples/experiment.py` | `row_to_state()`, `process_data()` |
+| Full workflow demo | `examples/sarsa.ipynb` | Start here for understanding |
+| Add new analysis | `src/sarsa/` | Keep package task-agnostic |
+| Add experiment helper | `examples/` | Task-specific code goes here |
+
+## Code Map
+
+| Symbol | Type | Location | Role |
+|--------|------|----------|------|
+| `fit` | function | sarsa.py:232 | Main entry - optimize SARSA params |
+| `run` | function | sarsa.py:157 | Execute SARSA over quintuples |
+| `update` | function | sarsa.py:122 | Single SARSA TD update |
+| `Quintuple` | dataclass | sarsa.py:37 | (s1, a1, r2, s2, a2) transition |
+| `ParamIndex` | enum | sarsa.py:29 | alpha=0, beta=1, gamma=2 |
+| `PARAM_BOUNDS` | const | sarsa.py:22 | Default bounds for optimizer |
+
+## Commands
+
+```bash
+# Install
+uv sync                        # Runtime deps only
+uv sync --extra examples       # + JupyterLab for notebook
+pip install -e .               # Alternative editable install
+
+# Run
+jupyter lab examples/sarsa.ipynb   # Primary workflow
+
+# Lint (treat warnings as errors before commit)
+uvx ruff check
+uvx ruff format
+```
+
+## Conventions
+
+- **PEP 8** with 4-space indent
+- **Type hints** on public functions: `def run_session(path: Path, rng: np.random.Generator) -> None`
+- **NumPy docstrings** with `Parameters`, `Returns`, `Raises` sections
+- **One class/solver per file**
+- **Constants**: UPPERCASE (`ACTION_SIZE`, `EPS`)
+- **Imports**: Use `from sarsa import sarsa` after editable install
+
+## Anti-Patterns
+
+- **No `as any` / type suppression** - fix types properly
+- **No tests exist yet** - add `tests/test_<module>.py` when contributing
+- **No CLI entry points** - library only, use notebook or import
+
+## Notes
+
+- State/action must be integer numpy arrays
+- First 3 params are always (alpha, beta, gamma); custom params follow
+- `transition_reward_func` callback computes rewards on-the-fly during `run()`
+- Large datasets: place outside `examples/`, document location
